@@ -13,11 +13,30 @@
 #define M_SPC_L LCTL(KC_LEFT)
 #define M_SPC_R LCTL(KC_RGHT)
 
+// Tap dance
+#define TD_RST TD(TD_RESET)
+
 // Super CMD + TAB: Keeps CMD pressed until the special layer is deactivated.
 bool is_cmd_tab_active = false;
 
 enum custom_keycodes {
     CMD_TAB = SAFE_RANGE
+};
+
+// Tap dance
+enum {
+    TD_RESET = 0  // Put into DFU mode after 3 presses.
+};
+
+void td_reset (qk_tap_dance_state_t *state, void *user_data) {
+    if (state->count >= 3) {
+        reset_keyboard();
+        reset_tap_dance(state);
+    }
+}
+
+qk_tap_dance_action_t tap_dance_actions[] = {
+   [TD_RESET] = ACTION_TAP_DANCE_FN(td_reset)
 };
 
 enum layer_names {
@@ -217,7 +236,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     * └────┴────┴────┴────┴──────────┴─────────┴──────┴────┴────┴────┘
     */
     [_RS] = LAYOUT_arrow_command(
-        RESET,   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        TD_RST,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          XXXXXXX, XXXXXXX,          XXXXXXX, XXXXXXX, XXXXXXX, _______

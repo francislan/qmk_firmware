@@ -3,6 +3,8 @@
 
 #include "../../config.h"
 
+#define TAPPING_TERM 200
+
 #define MOUSEKEY_DELAY 0
 #define MOUSEKEY_INTERVAL 16
 #define MOUSEKEY_TIME_TO_MAX 60
