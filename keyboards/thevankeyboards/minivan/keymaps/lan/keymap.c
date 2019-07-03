@@ -58,7 +58,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     * ├─────┴─┬──┴─┬──┴─┬──┴─┬──┴─┬──┴─┬──┴─┬──┴─┬──┴─┬──┴─┬──┴─┬────┤
     * │ LSHFT │ Z  │ X  │ C  │ V  │ B  │ N  │ M  │ ,  │ .  │ /  │RSFT│
     * ├────┬──┴─┬──┴─┬──┴─┬──┴────┴──┬─┴────┴──┬─┴───┬┴────┴─┬──┴────┤
-    * │LCTL│LALT│(NB)│LCMD│ENTER(SP) │  SPACE  │(NB) │ (FN)  │ (MC)  │
+    * │LCTL│LALT│(NB)│LCMD│ENTER(SP) │  SPACE  │(NB) │ (MC)  │ (FN)  │
     * └────┴────┴────┴────┴──────────┴─────────┴─────┴───────┴───────┘
     */
     /* 1: Special Layer
@@ -127,14 +127,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     * ├─────┴─┬──┴─┬──┴─┬──┴─┬──┴─┬──┴─┬──┴─┬──┴─┬──┴─┬──┴─┬──┴─┬────┤
     * │ LSHFT │ Z  │ X  │ C  │ V  │ B  │ N  │ M  │ ,  │ .  │ /  │RSFT│
     * ├────┬──┴─┬──┴─┬──┴─┬──┴────┴──┬─┴────┴──┬─┴───┬┴────┴─┬──┴────┤
-    * │LCTL│LALT│(NB)│LCMD│ENTER(SP) │  SPACE  │(NB) │ (FN)  │ (MC)  │
+    * │LCTL│LALT│(NB)│LCMD│ENTER(SP) │  SPACE  │(NB) │ (MC)  │ (FN)  │
     * └────┴────┴────┴────┴──────────┴─────────┴─────┴───────┴───────┘
     */
     [_MN] = LAYOUT_command(
         KC_ESC,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC,
         MS_TAB,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
         KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
-        KC_LCTL, KC_LALT, MO(_NB), KC_LCMD,          SP_ENT,  KC_SPC,                    MO(_NB), MO(_FN), MO(_MC)
+        KC_LCTL, KC_LALT, MO(_NB), KC_LCMD,          SP_ENT,  KC_SPC,                    MO(_NB), MO(_MC), MO(_FN)
     ),
 
     /* 1: Special Layer
