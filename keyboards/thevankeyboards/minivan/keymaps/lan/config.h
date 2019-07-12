@@ -3,6 +3,10 @@
 
 #include "../../config.h"
 
+#define NO_ACTION_ONESHOT
+#define NO_ACTION_MACRO
+#define NO_ACTION_FUNCTION
+
 #define TAPPING_TERM 200
 
 #define MOUSEKEY_DELAY 0
