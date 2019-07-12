@@ -7,6 +7,7 @@
 #define NO_ACTION_MACRO
 #define NO_ACTION_FUNCTION
 
+#define PERMISSIVE_HOLD
 #define TAPPING_TERM 200
 
 #define MOUSEKEY_DELAY 0
