@@ -32,7 +32,7 @@ enum {
   TD_RESET = 0  // Put into DFU mode after 5 presses.
 };
 
-void td_reset (qk_tap_dance_state_t *state, void *user_data) {
+void td_reset(qk_tap_dance_state_t *state, void *user_data) {
   if (state->count >= 5) {
     reset_keyboard();
     reset_tap_dance(state);
@@ -232,7 +232,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
     _______, _______, _______, _______,          KC_BTN2, KC_BTN1,                   _______, _______, _______
   ),
-};  
+};
+
+// Super CMD+TAB
+// To be called everytime SP is switched off.
+static void maybe_register_super_cmd_tab(void) {
+  if (is_cmd_tab_active && IS_LAYER_OFF(_SP)) {
+    unregister_code(KC_LCMD);
+    is_cmd_tab_active = false;
+  }
+}
 
 // Custom implementation of LT for SP layer that allows interruption.
 // Example:
@@ -248,6 +257,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 //   SP press, k1 press, SP release, k2...kN press and release, k1 release.
 //   Possible fix: Store the list of "interrupt" keycodes and cancel interruption
 //   mechanism if a new key is pressed. A bitmap could be a viable solution.
+// - There might be weird interaction between Super CMD+TAB and this interruption
+//   mechanism but this shouldn't happen during normal usage.
 
 typedef struct {
   bool sp_key_pressed;    // State of the SP key.
@@ -288,6 +299,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case SP_ENT:
       handle_lt(record->event.pressed);
+      // Super CMD+TAB
+      maybe_register_super_cmd_tab();
       // Returns false here, so that this key doesn't count towards
       // key_presses and key_releases.
       return false;
@@ -314,19 +327,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         register_code16(keycode);
         unregister_code16(keycode);
         layer_off(_SP);
+        maybe_register_super_cmd_tab();
         return false;
       }
     }
   }
 
   return true;
-}
-
-void matrix_scan_user(void) {
-  if (is_cmd_tab_active) {
-    if (IS_LAYER_OFF(_SP)) {
-      unregister_code(KC_LCMD);
-      is_cmd_tab_active = false;
-    }
-  }
 }
