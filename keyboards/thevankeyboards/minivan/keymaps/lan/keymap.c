@@ -153,10 +153,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   * └────┴────┴────┴────┴──────────┴─────────┴─────┴───────┴───────┘
   */
   [_SP] = LAYOUT_command(
-    KC_GRV,  KC_CAPS, TB_L   , TB_NEW,  TB_R,    XXXXXXX, KC_PGUP, KC_HOME, KC_UP,   KC_END,  XXXXXXX, KC_DEL,
-    _______, XXXXXXX, M_SPC_L, CMD_TAB, M_SPC_R, XXXXXXX, KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, KC_MINS, KC_EQL,
-    _______, KC_LPRN, KC_RPRN, TB_CLS,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_LBRC, KC_RBRC, KC_BSLS, _______,
-    _______, _______, _______, _______,          _______, _______,                   _______, _______, _______
+    KC_GRV,  KC_CAPS, TB_L   , TB_NEW,  TB_R,    XXXXXXX, KC_PGUP, LCMD(KC_LEFT), KC_UP,   LCMD(KC_RGHT), XXXXXXX, KC_DEL,
+    _______, XXXXXXX, M_SPC_L, CMD_TAB, M_SPC_R, XXXXXXX, KC_PGDN, KC_LEFT,       KC_DOWN, KC_RGHT,       KC_MINS, KC_EQL,
+    _______, KC_LPRN, KC_RPRN, TB_CLS,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,       KC_LBRC, KC_RBRC,       KC_BSLS, _______,
+    _______, _______, _______, _______,          _______, _______,                         _______,       _______, _______
   ),
 
   /* 2: Number Layer
