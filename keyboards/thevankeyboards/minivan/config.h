@@ -153,4 +153,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //#define NO_ACTION_MACRO
 //#define NO_ACTION_FUNCTION
 
+/* RGB Setup */
+#define RGB_DI_PIN D0
+#define RGBLED_NUM 3
+#define RGBLIGHT_SLEEP
+
 #endif

@@ -19,6 +19,9 @@
 // Tap dance
 #define TD_RST TD(TD_RESET)
 
+// RGB
+#define RGB_OFF 0x00, 0x00, 0x00
+
 // Super CMD + TAB: Keeps CMD pressed until the special layer is deactivated.
 bool is_cmd_tab_active = false;
 
@@ -34,6 +37,11 @@ enum {
 
 void td_reset(qk_tap_dance_state_t *state, void *user_data) {
   if (state->count >= 5) {
+    setrgb(RGB_RED, (LED_TYPE *)&led[0]);
+    setrgb(RGB_RED, (LED_TYPE *)&led[1]);
+    setrgb(RGB_RED, (LED_TYPE *)&led[2]);
+    rgblight_set();
+   
     reset_keyboard();
     reset_tap_dance(state);
   }
@@ -153,10 +161,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   * └────┴────┴────┴────┴──────────┴─────────┴─────┴───────┴───────┘
   */
   [_SP] = LAYOUT_command(
-    KC_GRV,  KC_CAPS, TB_L   , TB_NEW,  TB_R,    XXXXXXX, KC_PGUP, LCMD(KC_LEFT), KC_UP,   LCMD(KC_RGHT), XXXXXXX, KC_DEL,
-    _______, XXXXXXX, M_SPC_L, CMD_TAB, M_SPC_R, XXXXXXX, KC_PGDN, KC_LEFT,       KC_DOWN, KC_RGHT,       KC_MINS, KC_EQL,
-    _______, KC_LPRN, KC_RPRN, TB_CLS,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,       KC_LBRC, KC_RBRC,       KC_BSLS, _______,
-    _______, _______, _______, _______,          _______, _______,                         _______,       _______, _______
+    KC_GRV,  KC_CAPS, TB_L   , TB_NEW,  TB_R,    XXXXXXX, KC_PGUP, KC_HOME, KC_UP,   KC_END,  XXXXXXX, KC_DEL,
+    _______, XXXXXXX, M_SPC_L, CMD_TAB, M_SPC_R, XXXXXXX, KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, KC_MINS, KC_EQL,
+    _______, KC_LPRN, KC_RPRN, TB_CLS,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_LBRC, KC_RBRC, KC_BSLS, _______,
+    _______, _______, _______, _______,          _______, _______,                   _______, _______, _______
   ),
 
   /* 2: Number Layer
@@ -334,4 +342,31 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
 
   return true;
+}
+
+void keyboard_post_init_user(void) {
+  #ifdef RGBLIGHT_ENABLE
+    // Set up RGB effects on only the third LED (index 2)
+    rgblight_set_effect_range(2, 1);
+    // Set LED effects to breathing mode in blue color
+    rgblight_sethsv_noeeprom(HSV_BLUE);
+    rgblight_mode_noeeprom(RGBLIGHT_EFFECT_BREATHING + 2);
+
+    // Init the first LED to static red, and second LED to off.
+    setrgb(RGB_RED, (LED_TYPE *)&led[0]);
+    setrgb(RGB_OFF, (LED_TYPE *)&led[1]);
+    rgblight_set();
+  #endif //RGBLIGHT_ENABLE
+}
+
+uint32_t layer_state_set_user(uint32_t state){
+  #ifdef RGBLIGHT_ENABLE
+    if (layer_state_cmp(state, _MS)) {
+      setrgb(RGB_GREEN, (LED_TYPE *)&led[1]);
+    } else {
+      setrgb(RGB_OFF, (LED_TYPE *)&led[1]);
+    }
+    rgblight_set();
+  #endif //RGBLIGHT_ENABLE
+  return state;
 }
