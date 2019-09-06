@@ -344,8 +344,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   return true;
 }
 
+// LED config.
+#ifdef RGBLIGHT_ENABLE
 void keyboard_post_init_user(void) {
-  #ifdef RGBLIGHT_ENABLE
     // Set up RGB effects on only the third LED (index 2)
     rgblight_set_effect_range(2, 1);
     // Set LED effects to breathing mode in blue color
@@ -356,17 +357,15 @@ void keyboard_post_init_user(void) {
     setrgb(RGB_RED, (LED_TYPE *)&led[0]);
     setrgb(RGB_OFF, (LED_TYPE *)&led[1]);
     rgblight_set();
-  #endif //RGBLIGHT_ENABLE
 }
 
-uint32_t layer_state_set_user(uint32_t state){
-  #ifdef RGBLIGHT_ENABLE
+uint32_t layer_state_set_user(uint32_t state) {
     if (layer_state_cmp(state, _MS)) {
       setrgb(RGB_GREEN, (LED_TYPE *)&led[1]);
     } else {
       setrgb(RGB_OFF, (LED_TYPE *)&led[1]);
     }
     rgblight_set();
-  #endif //RGBLIGHT_ENABLE
   return state;
 }
+#endif //RGBLIGHT_ENABLE
