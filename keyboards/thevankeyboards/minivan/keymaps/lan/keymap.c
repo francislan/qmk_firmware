@@ -23,6 +23,12 @@ bool is_cmd_tab_active = false;
 
 enum custom_keycodes {
   CMD_TAB = SAFE_RANGE,  // "Super" CMD+TAB.
+  // Macros
+  VIM_QT,    // Exit Vim
+  VIM_CT,    // Close top tab in Vim
+  VIM_CP,    // Copy to Clipboard in Vim
+  VIM_PST,   // Paste from Clipboard in Vim
+  BZ_TEST,   // Blaze test
 };
 
 // Tap dance
@@ -104,11 +110,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   */
   /* 4: Macro Layer
   * ┌────┬────┬────┬────┬────┬────┬────┬────┬────┬────┬────┬───────┐
-  * │    │    │    │    │    │    │    │    │    │    │    │       │  
+  * │    │VMQT│    │    │    │BZTS│    │    │    │    │    │       │  
   * ├────┴┬───┴┬───┴┬───┴┬───┴┬───┴┬───┴┬───┴┬───┴┬───┴┬───┴┬──────┤
-  * │     │    │    │    │    │    │    │    │    │    │    │      │
+  * │     │VMCT│    │    │    │    │    │    │    │    │    │      │
   * ├─────┴─┬──┴─┬──┴─┬──┴─┬──┴─┬──┴─┬──┴─┬──┴─┬──┴─┬──┴─┬──┴─┬────┤
-  * │       │    │    │    │    │    │    │    │    │    │    │    │
+  * │       │    │    │VMCP│VMPT│    │    │    │    │    │    │    │
   * ├────┬──┴─┬──┴─┬──┴─┬──┴────┴──┬─┴────┴──┬─┴───┬┴────┴─┬──┴────┤
   * │    │    │    │    │          │         │     │       │       │
   * └────┴────┴────┴────┴──────────┴─────────┴─────┴───────┴───────┘
@@ -201,19 +207,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   /* 4: Macro Layer
   * ┌────┬────┬────┬────┬────┬────┬────┬────┬────┬────┬────┬───────┐
-  * │    │    │    │    │    │    │    │    │    │    │    │       │  
+  * │    │VMQT│    │    │    │BZTS│    │    │    │    │    │       │  
   * ├────┴┬───┴┬───┴┬───┴┬───┴┬───┴┬───┴┬───┴┬───┴┬───┴┬───┴┬──────┤
-  * │     │    │    │    │    │    │    │    │    │    │    │      │
+  * │     │VMCT│    │    │    │    │    │    │    │    │    │      │
   * ├─────┴─┬──┴─┬──┴─┬──┴─┬──┴─┬──┴─┬──┴─┬──┴─┬──┴─┬──┴─┬──┴─┬────┤
-  * │       │    │    │    │    │    │    │    │    │    │    │    │
+  * │       │    │    │VMCP│VMPT│    │    │    │    │    │    │    │
   * ├────┬──┴─┬──┴─┬──┴─┬──┴────┴──┬─┴────┴──┬─┴───┬┴────┴─┬──┴────┤
   * │    │    │    │    │          │         │     │       │       │
   * └────┴────┴────┴────┴──────────┴─────────┴─────┴───────┴───────┘
   */
   [_MC] = LAYOUT_command(
-    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-    _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-    _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+    XXXXXXX, VIM_QT,  XXXXXXX, XXXXXXX, XXXXXXX, BZ_TEST, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+    _______, VIM_CT,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+    _______, XXXXXXX, XXXXXXX, VIM_CP,  VIM_PST, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
     _______, _______, _______, _______,          _______, _______,                   _______, _______, _______
   ),
 
@@ -258,7 +264,33 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         unregister_code(KC_TAB);
       }
       break;
-  }
+    case VIM_QT:
+      if (record->event.pressed) {
+        SEND_STRING(SS_TAP(X_ESCAPE) SS_TAP(X_ESCAPE) ":wq" SS_TAP(X_ENTER));
+      }
+      break;
+    case VIM_CT:
+      if (record->event.pressed) {
+        SEND_STRING(SS_TAP(X_ESCAPE) SS_TAP(X_ESCAPE) SS_LCTRL("wk") ":q" SS_TAP(X_ENTER));
+      }
+      break;
+    case VIM_CP: 
+      if (record->event.pressed) {
+        SEND_STRING("\"*y");
+      }
+      break;
+    case VIM_PST:
+      if (record->event.pressed) {
+        SEND_STRING("\"*p");
+      }
+      break;
+    case BZ_TEST:
+      if (record->event.pressed) {
+        SEND_STRING("blaze test : --test_output=all --strip=never --nocache_test_results --runs_per_test=1");
+        SEND_STRING(SS_TAP(X_HOME) SS_DOWN(X_LALT) SS_TAP(X_RIGHT) SS_TAP(X_RIGHT) SS_TAP(X_RIGHT) SS_UP(X_LALT) SS_TAP(X_RIGHT));
+      }
+      break;
+    }
   return true;
 }
 
