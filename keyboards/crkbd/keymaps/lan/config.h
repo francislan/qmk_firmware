@@ -17,6 +17,7 @@
 #define MOUSEKEY_WHEEL_TIME_TO_MAX 40
 #define MOUSEKEY_WHEEL_MAX_SPEED 5
 
+
 #define OLED_BRIGHTNESS 128
 
-#define OLED_FONT_H "keyboards/crkbd/lib/glcdfont.c"
+#define OLED_FONT_H "keyboards/crkbd/keymaps/gotham/glcdfont.c"

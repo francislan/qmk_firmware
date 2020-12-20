@@ -230,73 +230,107 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-  if (!is_master) {
-    return OLED_ROTATION_180;  // flips the display 180 degrees if offhand
-  }
-  return rotation;
+    return OLED_ROTATION_270;
 }
 
-void oled_render_name(void) {
-    oled_write_ln_P(PSTR("Francis LAN"), false);
+void oled_render_corne_logo(void) {
+    static const char PROGMEM font_logo[16] = {0x80, 0x81, 0x82, 0x83, 0x84, 0xa0, 0xa1, 0xa2, 0xa3, 0xa4, 0xc0, 0xc1, 0xc2, 0xc3, 0xc4, 0};
+    oled_write_P(font_logo, false);
+};
+
+void oled_render_qmk_logo(void) {
+    static const char PROGMEM font_qmk_logo[16] = {0x8a, 0x8b, 0x8c, 0x8d, 0x8e, 0xaa, 0xab, 0xac, 0xad, 0xae, 0xca, 0xcb, 0xcc, 0xcd, 0xce, 0};
+    oled_write_P(font_qmk_logo, false);
+};
+
+void oled_render_kb_split(void) {
+    static const char PROGMEM font_kb_split[11] = {0xba, 0xbb, 0xbc, 0xbd, 0xbe, 0xda, 0xdb, 0xdc, 0xdd, 0xde, 0};
+    oled_write_P(font_kb_split, false);
+};
+
+void oled_render_mod_ctrl(bool invert) {
+    static const char PROGMEM font_ctrl[3] = {0x93, 0x94, 0};
+    oled_write_P(font_ctrl, invert);
+};
+
+void oled_render_mod_alt(bool invert) {
+    static const char PROGMEM font_alt[3] = {0xb3, 0xb4, 0};
+    oled_write_P(font_alt, invert);
+};
+
+void oled_render_mod_shift(bool invert) {
+    static const char PROGMEM font_shift[3] = {0xd3, 0xd4, 0};
+    oled_write_P(font_shift, invert);
+};
+
+void oled_render_mod_gui(bool invert) {
+    static const char PROGMEM font_gui[3] = {0x95, 0x96, 0};
+    oled_write_P(font_gui, invert);
+};
+
+void oled_render_mod_status(void) {
+    oled_write_ln_P(PSTR("Mods"), false);
+    oled_write_ln("", false);
+    uint8_t modifiers = get_mods();
+
+    oled_render_mod_ctrl(modifiers & MOD_MASK_CTRL);
+    oled_write_P(PSTR(" "), false);
+    oled_render_mod_shift(modifiers & MOD_MASK_SHIFT);
+    oled_write_ln("", false);
+    oled_render_mod_alt(modifiers & MOD_MASK_ALT);
+    oled_write_P(PSTR(" "), false);
+    oled_render_mod_gui(modifiers & MOD_MASK_GUI);
 }
 
 void oled_render_layer_state(void) {
-    oled_write_P(PSTR("Layer: "), false);
+    oled_write_P(PSTR("Layer"), false);
+    oled_write_ln("", false);
     switch (layer_state) {
         case _MN:
             oled_write_ln_P(PSTR("Main"), false);
             break;
         case 1 << _SP:
-            oled_write_ln_P(PSTR("Special"), false);
+            oled_write_ln_P(PSTR("Spec"), false);
             break;
         case 1 << _NB:
-            oled_write_ln_P(PSTR("Number"), false);
+            oled_write_ln_P(PSTR("Num"), false);
             break;
         case 1 << _FN:
-            oled_write_ln_P(PSTR("Function"), false);
+            oled_write_ln_P(PSTR("Func"), false);
             break;
         case 1 << _MS:
-            oled_write_ln_P(PSTR("Mouse"), false);
+            oled_write_P(PSTR("Mouse"), false);
             break;
+        default:
+            oled_write_ln("", false);
     }
 }
 
-void oled_render_keylock_status(uint8_t led_usb_state) {
-    oled_write_P(PSTR("Caps Lock: "), false);
-    if (led_usb_state & (1 << USB_LED_CAPS_LOCK)) {
-        oled_write_ln_P(PSTR("Y"), true);
-    } else {
-        oled_write_ln_P(PSTR("N"), false);
-    }
-}
-
-void oled_render_mod_status(uint8_t modifiers) {
-    oled_write_P(PSTR("Ctrl"), (modifiers & MOD_MASK_CTRL));
-    oled_write_P(PSTR(" "), false);
-    oled_write_P(PSTR("Shift"), (modifiers & MOD_MASK_SHIFT));
-    oled_write_P(PSTR(" "), false);
-    oled_write_P(PSTR("Alt"), (modifiers & MOD_MASK_ALT));
-    oled_write_P(PSTR(" "), false);
-    oled_write_ln_P(PSTR("Cmd"), (modifiers & MOD_MASK_GUI));
-}
-
-void oled_render_logo(void) {
-    static const char PROGMEM crkbd_logo[] = {
-        0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0x8a, 0x8b, 0x8c, 0x8d, 0x8e, 0x8f, 0x90, 0x91, 0x92, 0x93, 0x94,
-        0xa0, 0xa1, 0xa2, 0xa3, 0xa4, 0xa5, 0xa6, 0xa7, 0xa8, 0xa9, 0xaa, 0xab, 0xac, 0xad, 0xae, 0xaf, 0xb0, 0xb1, 0xb2, 0xb3, 0xb4,
-        0xc0, 0xc1, 0xc2, 0xc3, 0xc4, 0xc5, 0xc6, 0xc7, 0xc8, 0xc9, 0xca, 0xcb, 0xcc, 0xcd, 0xce, 0xcf, 0xd0, 0xd1, 0xd2, 0xd3, 0xd4,
-        0};
-    oled_write_P(crkbd_logo, false);
+void oled_render_caps_status(void) {
+    uint8_t led_usb_state = host_keyboard_leds();
+    oled_write_P(PSTR("Caps"), led_usb_state & (1 << USB_LED_CAPS_LOCK));
 }
 
 void oled_task_user(void) {
     if (is_master) {
-        oled_render_name();
+        oled_render_kb_split();
+        oled_write_ln("", false);
         oled_render_layer_state();
-        oled_render_keylock_status(host_keyboard_leds());
-        oled_render_mod_status(get_mods());
+        oled_write_ln("", false);
+        oled_render_caps_status();
+        oled_write_ln("", false);
+        oled_write_ln("", false);
+        oled_render_mod_status();
     } else {
-        oled_render_logo();
+        oled_write_ln("", false);
+        oled_render_corne_logo();
+        oled_write_ln_P(PSTR("Corne"), false);
+        oled_write_ln("", false);
+        oled_render_qmk_logo();
+        oled_write_ln_P(PSTR(" QMK"), false);
+        oled_write_ln("", false);
+        oled_write_ln("", false);
+        oled_write_ln_P(PSTR(" LAN "), false);
     }
 }
 
