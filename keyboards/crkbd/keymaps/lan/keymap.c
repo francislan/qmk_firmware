@@ -286,23 +286,20 @@ void oled_render_layer_state(void) {
     oled_write_P(PSTR("Layer"), false);
     oled_write_ln("", false);
     switch (layer_state) {
-        case _MN:
-            oled_write_ln_P(PSTR("Main"), false);
-            break;
         case 1 << _SP:
-            oled_write_ln_P(PSTR("Spec"), false);
+            oled_write_P(PSTR("> SP_"), false);
             break;
         case 1 << _NB:
-            oled_write_ln_P(PSTR("Num"), false);
+            oled_write_P(PSTR("> NB_"), false);
             break;
         case 1 << _FN:
-            oled_write_ln_P(PSTR("Func"), false);
+            oled_write_P(PSTR("> FN_"), false);
             break;
         case 1 << _MS:
-            oled_write_P(PSTR("Mouse"), false);
+            oled_write_P(PSTR("> MS_"), false);
             break;
         default:
-            oled_write_ln("", false);
+            oled_write_ln_P(PSTR("> _"), false);
     }
 }
 
